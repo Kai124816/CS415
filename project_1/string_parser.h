@@ -1,0 +1,1 @@
+int count_token(char* buf, const char* delim);

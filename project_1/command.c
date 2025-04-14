@@ -3,6 +3,7 @@
 #include <string.h>    // for strlen
 #include <unistd.h>    // for write
 #include <stdlib.h>
+#include <fcntl.h>
 
 void listDir() {
     DIR *current = opendir(".");
@@ -32,7 +33,7 @@ void makeDir(char *dirName){
     int result = mkdir(dirName, 0777);
 
     if(result = 1){
-        perror("error creating directory");
+        write(1,"error creating directory",strlen("error creating directory"));
     }
 }
 
@@ -41,12 +42,13 @@ void changeDir(char *dirName){
     int result = chdir(dirName);
 
     if (result != 0){
-        write(1,"cd: no such file or directory",30);
+        write(1,"cd: no such file or directory",strlen("cd: no such file or directory"));
     }
 }
 
 
 void copyFile(char *sourcePath, char *destinationPath){
+    int src = open(sourcePath, O_RDONLY);
     
 }
 
