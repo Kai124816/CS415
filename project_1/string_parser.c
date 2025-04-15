@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define _GNU_SOURCE
 
 int count_token(char* buf, const char* delim){
     if (buf == NULL){
