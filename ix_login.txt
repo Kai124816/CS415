@@ -1,0 +1,4 @@
+ssh khogan@ix-dev.cs.uoregon.edu
+
+detty2-kaqriq-heDqor
+
