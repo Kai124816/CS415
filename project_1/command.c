@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <dirent.h>
-#include <string.h>    // for strlen
-#include <unistd.h>    // for write
+#include <string.h>   
+#include <unistd.h>    
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <libgen.h>
+#include <command.h>
 
 void listDir() {
     DIR *current = opendir(".");
@@ -81,21 +82,18 @@ void copyFile(char *sourcePath, char *destinationPath){
 
 void moveFile(char *sourcePath, char *destinationPath){
     copyFile(sourcePath,destinationPath);
-    char* filename = basename(sourcePath);
-    
-    for(int i = 0; i < strlen(sourcePath); i++){
-
-    }
+    deleteFile(sourcePath);
 }
 
 
 void deleteFile(char *filename){
     DIR *current = opendir("."); 
     struct dirent *entry;
+    char* file = basename(filename);
     int found = 0;
 
     while ((entry = readdir(current)) != NULL) {
-        if(strcmp(entry->d_name,filename == 1)){
+        if(strcmp(entry->d_name,file) == 0){
             found = 1;
             break;
         }
@@ -106,5 +104,16 @@ void deleteFile(char *filename){
     }
     else{
         remove(filename);
+    }
+}
+
+
+void displayFile(char *filename){
+    int src = open("input.txt", O_RDONLY);
+    char buffer[4096];
+    ssize_t bytes;
+
+    while ((bytes = read(src, buffer, sizeof(buffer))) > 0) {
+        write(1, buffer, bytes);
     }
 }
