@@ -58,33 +58,28 @@ void copyFile(char *sourcePath, char *destinationPath){
 
     struct stat path_stat;
     int result = stat(destinationPath,&path_stat);
-    if (result == -1){
-        char error[256];
-        snprintf(error, sizeof(error), "cp: cannot create regular file '%s\n': No such file or directory", destinationPath);
-        write(1,error,strlen(error));
-    }
     char* filename = basename(sourcePath);
     int dest;
 
     if (S_ISDIR(path_stat.st_mode)){
-        char* buffer = (char*)malloc(strlen(filename) + strlen(destinationPath) + 1);
-        buffer = strcat(destinationPath,filename);
-        dest = open(buffer, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        char* buffer_1 = (char*)malloc(strlen(filename) + strlen(destinationPath) + 1);
+        buffer_1 = strcat(destinationPath,filename);
+        dest = open(buffer_1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        free(buffer_1);
     }
     else{
         dest = open(destinationPath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     }
     
     int src = open(sourcePath, O_RDONLY);
-    char buffer[4096];
+    char buffer_2[4096];
     ssize_t bytes;
-    while ((bytes = read(src, buffer, sizeof(buffer))) > 0) {
-        write(dest, buffer, bytes);
+    while ((bytes = read(src, buffer_2, sizeof(buffer_2))) > 0) {
+        write(dest, buffer_2, bytes);
     }
 
     close(src);
     close(dest);
-    if (S_ISDIR(path_stat.st_mode)){free(buffer);}    
 }
 
 
@@ -93,13 +88,6 @@ void moveFile(char *sourcePath, char *destinationPath){
     if(stat(sourcePath, &checker1) != 0){
         char error[256];
         snprintf(error, sizeof(error), "mv: cannot stat '%s\n': No such file or directory", sourcePath);
-        write(1,error,strlen(error));
-        return;
-    }
-    struct stat checker2;
-    if(stat(destinationPath, &checker2) != 0){
-        char error[256];
-        snprintf(error, sizeof(error), "mv: cannot stat '%s\n': No such file or directory", destinationPath);
         write(1,error,strlen(error));
         return;
     }

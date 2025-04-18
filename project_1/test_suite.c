@@ -1,46 +1,125 @@
-#include <stdio.h>
 #include <assert.h>
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <dirent.h>
 
-// Declare the functions
-int num_args(char* input);
-char** parse_command(char* input);
-void free_parsed(char** parsed, int num_tokens);
+#include "command.h"  // your function declarations
 
-void test_num_args() {
-    assert(num_args("ls -la") == 2);
-    assert(num_args("   echo hello   world  ") == 3);
-    assert(num_args("") == 0);
-    assert(num_args("   ") == 0);
-    assert(num_args("one") == 1);
-    printf("✅ num_args tests passed.\n");
+void test_make_and_change_dir() {
+    char *test_dir = "test_temp_dir";
+    makeDir(test_dir);
+    struct stat st;
+    assert(stat(test_dir, &st) == 0 && S_ISDIR(st.st_mode));
+
+    changeDir(test_dir);
+    char cwd[256];
+    getcwd(cwd, sizeof(cwd));
+    assert(strstr(cwd, test_dir) != NULL);
+
+    chdir("..");
+    rmdir(test_dir);
+    printf("✅ makeDir and changeDir passed.\n");
 }
 
-void test_parse_command() {
-    char input1[] = "gcc -o program main.c";
-    int expected_args1 = num_args(input1);
-    char** result1 = parse_command(input1);
-    assert(strcmp(result1[0], "gcc") == 0);
-    assert(strcmp(result1[1], "-o") == 0);
-    assert(strcmp(result1[2], "program") == 0);
-    assert(strcmp(result1[3], "main.c") == 0);
-    free_parsed(result1, expected_args1);
+void test_listDir() {
+    int fd = open("test_ls_out.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int saved_stdout = dup(1);
+    dup2(fd, 1);
 
-    char input2[] = "echo   hello   world";
-    int expected_args2 = num_args(input2);
-    char** result2 = parse_command(input2);
-    assert(strcmp(result2[0], "echo") == 0);
-    assert(strcmp(result2[1], "hello") == 0);
-    assert(strcmp(result2[2], "world") == 0);
-    free_parsed(result2, expected_args2);
+    listDir();
 
-    printf("✅ parse_command tests passed.\n");
+    fflush(stdout);
+    dup2(saved_stdout, 1);
+    close(fd);
+
+    FILE *f = fopen("test_ls_out.txt", "r");
+    assert(f != NULL);
+
+    char content[1024];
+    fread(content, 1, sizeof(content), f);
+    assert(strstr(content, "test_ls_out.txt") != NULL);
+
+    fclose(f);
+    remove("test_ls_out.txt");
+    printf("✅ listDir passed.\n");
+}
+
+void test_copy_and_display_file() {
+    char *src = "test_input.txt";
+    char *dest = "test_output.txt";
+    FILE *f = fopen(src, "w");
+    fprintf(f, "hello test file\n");
+    fclose(f);
+
+    copyFile(src, dest);
+
+    FILE *f2 = fopen(dest, "r");
+    char line[256];
+    fgets(line, sizeof(line), f2);
+    assert(strcmp(line, "hello test file\n") == 0);
+    fclose(f2);
+
+    // test displayFile()
+    int fd = open("test_cat_out.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int saved_stdout = dup(1);
+    dup2(fd, 1);
+
+    displayFile(dest);
+
+    fflush(stdout);
+    dup2(saved_stdout, 1);
+    close(fd);
+
+    FILE *out = fopen("test_cat_out.txt", "r");
+    fgets(line, sizeof(line), out);
+    assert(strcmp(line, "hello test file\n") == 0);
+    fclose(out);
+
+    remove(src);
+    remove(dest);
+    remove("test_cat_out.txt");
+
+    printf("✅ copyFile and displayFile passed.\n");
+}
+
+void test_move_file() {
+    FILE *f = fopen("move_src.txt", "w");
+    fprintf(f, "data");
+    fclose(f);
+
+    makeDir("mvtest");
+    moveFile("move_src.txt", "mvtest/move_dest.txt");
+
+    assert(access("move_src.txt", F_OK) != 0); // should be deleted
+    assert(access("mvtest/move_dest.txt", F_OK) == 0);
+
+    remove("mvtest/move_dest.txt");
+    rmdir("mvtest");
+    printf("✅ moveFile passed.\n");
+}
+
+void test_delete_file() {
+    FILE *f = fopen("delete_me.txt", "w");
+    fprintf(f, "bye");
+    fclose(f);
+
+    deleteFile("delete_me.txt");
+
+    assert(access("delete_me.txt", F_OK) != 0);
+    printf("✅ deleteFile passed.\n");
 }
 
 int main() {
-    test_num_args();
-    test_parse_command();
-    printf("🎉 All tests passed.\n");
+    test_make_and_change_dir();
+    test_listDir();
+    test_copy_and_display_file();
+    test_move_file();
+    test_delete_file();
+
+    printf("\n🎉 All command tests passed!\n");
     return 0;
 }
