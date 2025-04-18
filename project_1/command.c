@@ -1,12 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <dirent.h>
 #include <string.h>   
 #include <unistd.h>    
-#include <stdlib.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <libgen.h>
-#include <command.h>
+#include "command.h"
 
 void listDir() {
     DIR *current = opendir(".");
