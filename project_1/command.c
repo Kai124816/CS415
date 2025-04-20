@@ -8,13 +8,14 @@
 #include <libgen.h>
 #include "command.h"
 
+
 void listDir() {
     DIR *current = opendir(".");
     struct dirent *entry;
 
     while ((entry = readdir(current)) != NULL) {
         char name[256];
-        snprintf(name, sizeof(name), "%s              ", entry->d_name);
+        snprintf(name, sizeof(name), "%s ", entry->d_name);
         write(1,name,strlen(name));
     }
     write(1, "\n", 1); 
@@ -68,10 +69,9 @@ void copyFile(char *sourcePath, char *destinationPath){
     int dest;
 
     if (S_ISDIR(path_stat.st_mode)){
-        char* buffer_1 = (char*)malloc(strlen(filename) + strlen(destinationPath) + 1);
-        buffer_1 = strcat(destinationPath,filename);
-        dest = open(buffer_1, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        free(buffer_1);
+        char dest_path[512];
+        snprintf(dest_path, sizeof(dest_path), "%s/%s", destinationPath, basename(sourcePath));
+        dest = open(dest_path, O_WRONLY | O_CREAT | O_TRUNC, checker.st_mode & 0777);
     }
     else{
         dest = open(destinationPath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -143,4 +143,5 @@ void displayFile(char *filename){
     while ((bytes = read(src, buffer, sizeof(buffer))) > 0) {
         write(1, buffer, bytes);
     }
+    write(1, "\n", 1); 
 }

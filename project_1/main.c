@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
     char* delim = ";";
     FILE *input = stdin;  
     int output = STDOUT_FILENO;
-    int opt;
     char *filename = NULL;
     int file_mode = 0;
 
@@ -36,6 +35,7 @@ int main(int argc, char *argv[]) {
     {
         input = fopen(filename, "r");
         output = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+        dup2(output,STDOUT_FILENO);
     }
 
     char* ls = "ls";
@@ -49,13 +49,19 @@ int main(int argc, char *argv[]) {
     char* EXIT = "EXIT";
 
     while(1) {
-        char line = NULL;
+        char *line = NULL;
         size_t len = 0;
         ssize_t read;
         int exit = 0;
 
-        write(1,">>>",strlen(">>>"));
+        if(!file_mode){
+            write(output,">>>",strlen(">>>"));
+            write(1, "\n", 1);
+        }
         read = getline(&line, &len, input);
+        if (read == -1) {
+            break;
+        }
         trim_trailing_whitespace(line);
         command_line cmd = str_filler(line,delim);
 
@@ -147,6 +153,7 @@ int main(int argc, char *argv[]) {
         }
 
         free_command_line(&cmd);
+        free(line);
         if (exit == 1){break;}
     }
 
