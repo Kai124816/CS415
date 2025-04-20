@@ -10,19 +10,26 @@
 
 int main(int argc, char *argv[]) {
     char* delim = ";";
-    FILE* input = stdin;
-    int output = 1;
+    FILE *input = stdin;  
+    int output = STDOUT_FILENO;
     int opt;
     char *filename = NULL;
     int file_mode = 0;
 
-    if (argc == 3 && getopt(argc, argv, "f:") == 'f') {
-        file_mode = 1;
-        filename = optarg;
-        file_mode = 1;
-    } else if (argc != 1) {
-        fprintf(stderr, "Usage: %s [-f filename]\n", argv[0]);
-        exit(EXIT_FAILURE);
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-f") == 0) {
+            if (i + 1 < argc) {  
+                filename = argv[i + 1];  
+                file_mode = 1;
+                i++;  
+            } else {
+                fprintf(stderr, "Error: Missing filename after '-f'.\n");
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            fprintf(stderr, "Usage: %s [-f filename]\n", argv[0]);
+            exit(EXIT_FAILURE);
+        }
     }
 
     if(file_mode)
@@ -42,13 +49,13 @@ int main(int argc, char *argv[]) {
     char* EXIT = "EXIT";
 
     while(1) {
-        char *line = NULL;
+        char line = NULL;
         size_t len = 0;
         ssize_t read;
         int exit = 0;
 
         write(1,">>>",strlen(">>>"));
-        read = getline(&line, &len, stdin);
+        read = getline(&line, &len, input);
         trim_trailing_whitespace(line);
         command_line cmd = str_filler(line,delim);
 
