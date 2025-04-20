@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     }
 
     char* ls = "ls";
-    char* cwd = "cwd";
+    char* pwd = "pwd";
     char* mkdir = "mkdir";
     char* cd = "cd";
     char* cp = "cp";
@@ -65,9 +65,9 @@ int main(int argc, char *argv[]) {
                     listDir();
                 }
             }
-            else if (strcmp(cwd,parsed_command[0]) == 0){
+            else if (strcmp(pwd,parsed_command[0]) == 0){
                 if(arguments != 1){
-                    char* errormessage = "Error! Unsupported parameters for command: cwd\n";
+                    char* errormessage = "Error! Unsupported parameters for command: pwd\n";
                     write(1,errormessage,strlen(errormessage));
                 }
                 else{

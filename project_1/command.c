@@ -22,10 +22,12 @@ void listDir() {
 
 
 void showCurrentDir(){
-    char* buffer;
-    char *cwd = getcwd(buffer,256);
-    write(1,cwd,strlen(cwd));
-    write(1, "\n", 1); 
+    char *cwd = getcwd(NULL, 0);
+    if (cwd != NULL) {
+        write(1, cwd, strlen(cwd));
+        write(1, "\n", 1);
+        free(cwd);  
+    }
 }
 
 
