@@ -13,15 +13,19 @@ void listDir() {
     struct dirent *entry;
 
     while ((entry = readdir(current)) != NULL) {
-        write(1,entry->d_name,strlen(entry->d_name));
+        char name[256];
+        snprintf(name, sizeof(name), "%s              ", entry->d_name);
+        write(1,name,strlen(name));
     }
+    write(1, "\n", 1); 
 }
 
 
 void showCurrentDir(){
     char* buffer;
     char *cwd = getcwd(buffer,256);
-    write(1,cwd,strlen(cwd)); 
+    write(1,cwd,strlen(cwd));
+    write(1, "\n", 1); 
 }
 
 
@@ -51,7 +55,7 @@ void copyFile(char *sourcePath, char *destinationPath){
     struct stat checker;
     if(stat(sourcePath, &checker) != 0){
         char error[256];
-        snprintf(error, sizeof(error), "cp: cannot stat '%s\n': No such file or directory", sourcePath);
+        snprintf(error, sizeof(error), "cp: cannot stat '%s': No such file or directory\n", sourcePath);
         write(1,error,strlen(error));
         return;
     }
@@ -87,7 +91,7 @@ void moveFile(char *sourcePath, char *destinationPath){
     struct stat checker1;
     if(stat(sourcePath, &checker1) != 0){
         char error[256];
-        snprintf(error, sizeof(error), "mv: cannot stat '%s\n': No such file or directory", sourcePath);
+        snprintf(error, sizeof(error), "mv: cannot stat '%s': No such file or directory\n", sourcePath);
         write(1,error,strlen(error));
         return;
     }
@@ -112,7 +116,7 @@ void deleteFile(char *filename){
 
     if(found == 0){
         char error[256];
-        snprintf(error, sizeof(error), "rm: cannot remove ‘%s\n’: No such file or directory", filename);
+        snprintf(error, sizeof(error), "rm: cannot remove ‘%s’: No such file or directory\n", filename);
         write(1,error,strlen(error));
     }
     else{
@@ -125,12 +129,12 @@ void displayFile(char *filename){
     struct stat checker;
     if(stat(filename, &checker) != 0){
         char error[256];
-        snprintf(error, sizeof(error), "cat: '%s\n': No such file or directory", filename);
+        snprintf(error, sizeof(error), "cat: '%s': No such file or directory\n", filename);
         write(1,error,strlen(error));
         return;
     }
 
-    int src = open("input.txt", O_RDONLY);
+    int src = open(filename, O_RDONLY);
     char buffer[4096];
     ssize_t bytes;
 

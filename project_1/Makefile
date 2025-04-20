@@ -4,7 +4,7 @@ CC=gcc
 
 all: $(EXEC)
 
-$(EXEC): main.o string_parser.o command.o
+$(EXEC): main.o string_parser.o command.o command_parser.o
 	$(CC) $(FLAGS) $@ $^
 
 main.o: main.c

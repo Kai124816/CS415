@@ -35,5 +35,6 @@ command_line str_filler (char* buf, const char* delim);
 //this function safely free all the tokens within the array.
 void free_command_line(command_line* command);
 
+void trim_trailing_whitespace(char *str);
 
 #endif /* STRING_PARSER_H_ */

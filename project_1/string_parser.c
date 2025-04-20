@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "string_parser.h"
 
 int count_token(char* buf, const char* delim){
@@ -24,6 +25,17 @@ int count_token(char* buf, const char* delim){
     }
 
     return count;
+}
+
+
+void trim_trailing_whitespace(char *str) {
+    int len = strlen(str);
+
+    while (len > 0 && isspace((unsigned char)str[len - 1])) {
+        len--;
+    }
+
+    str[len] = '\0';
 }
 
 
