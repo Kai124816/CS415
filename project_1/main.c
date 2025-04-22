@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     char* mv = "mv";
     char* rm = "rm";
     char* cat = "cat";
-    char* EXIT = "EXIT";
+    char* ex = "exit";
 
     while(1) {
         char *line = NULL;
@@ -55,21 +55,23 @@ int main(int argc, char *argv[]) {
         int exit = 0;
 
         if(!file_mode){
-            write(output,">>>",strlen(">>>"));
-            write(1, "\n", 1);
+            write(output,">>> ",strlen(">>> "));
         }
         read = getline(&line, &len, input);
         if (read == -1) {
+            if(line != NULL){free(line);}
             break;
         }
         trim_trailing_whitespace(line);
         command_line cmd = str_filler(line,delim);
 
         for(int i=0; i<cmd.num_token; i++){
+            int empty = 0;
             int arguments = num_args(cmd.command_list[i]);
+            if(arguments == 0){empty = 1;}
             char** parsed_command = parse_command(cmd.command_list[i],arguments);
 
-            if (strcmp(ls,parsed_command[0]) == 0){
+            if (!empty && strcmp(ls,parsed_command[0]) == 0){
                 if(arguments != 1){
                     char* errormessage = "Error! Unsupported parameters for command: ls\n";
                     write(1,errormessage,strlen(errormessage));
@@ -78,7 +80,7 @@ int main(int argc, char *argv[]) {
                     listDir();
                 }
             }
-            else if (strcmp(pwd,parsed_command[0]) == 0){
+            else if (!empty && strcmp(pwd,parsed_command[0]) == 0){
                 if(arguments != 1){
                     char* errormessage = "Error! Unsupported parameters for command: pwd\n";
                     write(1,errormessage,strlen(errormessage));
@@ -87,7 +89,7 @@ int main(int argc, char *argv[]) {
                     showCurrentDir();
                 }
             }
-            else if (strcmp(mkdir,parsed_command[0]) == 0){
+            else if (!empty && strcmp(mkdir,parsed_command[0]) == 0){
                 if(arguments != 2){
                     char* errormessage = "Error! Unsupported parameters for command: mkdir\n";
                     write(1,errormessage,strlen(errormessage));
@@ -96,7 +98,7 @@ int main(int argc, char *argv[]) {
                     makeDir(parsed_command[1]);
                 }
             }
-            else if (strcmp(cd,parsed_command[0]) == 0){
+            else if (!empty && strcmp(cd,parsed_command[0]) == 0){
                 if(arguments != 2){
                     char* errormessage = "Error! Unsupported parameters for command: cd\n";
                     write(1,errormessage,strlen(errormessage));
@@ -105,7 +107,7 @@ int main(int argc, char *argv[]) {
                     changeDir(parsed_command[1]);
                 }
             }
-            else if (strcmp(cp,parsed_command[0]) == 0){
+            else if (!empty && strcmp(cp,parsed_command[0]) == 0){
                 if(arguments != 3){
                     char* errormessage = "Error! Unsupported parameters for command: cp\n";
                     write(1,errormessage,strlen(errormessage));
@@ -114,7 +116,7 @@ int main(int argc, char *argv[]) {
                     copyFile(parsed_command[1],parsed_command[2]);
                 }
             }
-            else if (strcmp(mv,parsed_command[0]) == 0){
+            else if (!empty && strcmp(mv,parsed_command[0]) == 0){
                 if(arguments != 3){
                     char* errormessage = "Error! Unsupported parameters for command: mv\n";
                     write(1,errormessage,strlen(errormessage));
@@ -123,7 +125,7 @@ int main(int argc, char *argv[]) {
                     moveFile(parsed_command[1],parsed_command[2]);
                 }
             }
-            else if (strcmp(rm,parsed_command[0]) == 0){
+            else if (!empty && strcmp(rm,parsed_command[0]) == 0){
                 if(arguments != 2){
                     char* errormessage = "Error! Unsupported parameters for command: rm\n";
                     write(1,errormessage,strlen(errormessage));
@@ -132,7 +134,7 @@ int main(int argc, char *argv[]) {
                     deleteFile(parsed_command[1]);
                 }
             }
-            else if (strcmp(cat,parsed_command[0]) == 0){
+            else if (!empty && strcmp(cat,parsed_command[0]) == 0){
                 if(arguments != 2){
                     char* errormessage = "Error! Unsupported parameters for command: cat\n";
                     write(1,errormessage,strlen(errormessage));
@@ -141,15 +143,21 @@ int main(int argc, char *argv[]) {
                     displayFile(parsed_command[1]);
                 }
             }
-            else if (strcmp(EXIT,parsed_command[0]) == 0){
+            else if (!empty && strcmp(ex,parsed_command[0]) == 0){
                 exit = 1;
+                free_parsed(parsed_command,arguments);
                 break;
             }
             else{
-                char error[256];
-                snprintf(error, sizeof(error), "Error! Unrecognized command: %s\n", parsed_command[0]);
-                write(1,error,strlen(error));
+                if(!empty)
+                {
+                    char error[256];
+                    snprintf(error, sizeof(error), "Error! Unrecognized command: %s\n", parsed_command[0]);
+                    write(1,error,strlen(error));
+                }
             }
+
+            if(parsed_command != NULL){free_parsed(parsed_command,arguments);}
         }
 
         free_command_line(&cmd);
@@ -157,4 +165,8 @@ int main(int argc, char *argv[]) {
         if (exit == 1){break;}
     }
 
+    if (file_mode) {
+        close(output);
+        fclose(input);
+    }
 }

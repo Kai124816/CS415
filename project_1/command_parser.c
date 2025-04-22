@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "command.h"
 #include "string_parser.h"
 #include "command_parser.h"
@@ -18,8 +19,9 @@ int num_args(char* input) {
 }
 
 
-char** parse_command(char*input,int num_commands){
-    char** parsed = (char**)malloc(num_commands * sizeof(char*));
+char** parse_command(char*input,int num_args){
+    if (num_args == 0){return NULL;}
+    char** parsed = (char**)malloc(num_args * sizeof(char*));
     int i = 0;
     char* token = strtok(input, " ");
 
@@ -30,6 +32,7 @@ char** parse_command(char*input,int num_commands){
         i++;
     }
     
+    free(token);
     return parsed;
 }
 
@@ -39,4 +42,14 @@ void free_parsed(char**parsed,int num_args){
         free(parsed[i]);
     }
     free(parsed);
+}
+
+void trim_trailing_whitespace(char *str) {
+    int len = strlen(str);
+
+    while (len > 0 && isspace((unsigned char)str[len - 1])) {
+        len--;
+    }
+
+    str[len] = '\0';
 }

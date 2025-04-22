@@ -24,18 +24,8 @@ int count_token(char* buf, const char* delim){
         token = strtok_r(NULL, delim, &ptr);
     }
 
+    free(copy_buf);
     return count;
-}
-
-
-void trim_trailing_whitespace(char *str) {
-    int len = strlen(str);
-
-    while (len > 0 && isspace((unsigned char)str[len - 1])) {
-        len--;
-    }
-
-    str[len] = '\0';
 }
 
 

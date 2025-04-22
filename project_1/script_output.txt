@@ -1,0 +1,99 @@
+rm -f *.o pseudo-shell
+gcc -c main.c
+gcc -c string_parser.c
+gcc -c command.c
+gcc -c command_parser.c
+gcc -g -o pseudo-shell main.o string_parser.o command.o command_parser.o
+
+Dev Notes: Make sure you are printing '>>> ' when prompting.
+ls has spaces inbetween each item it lists and one at the end.
+Dont forget new line characters.
+Tests are dependent if exit is implemented
+
+Testing 'ls' command...
+'ls' command output matches expected output.
+
+Testing 'cat' command...
+'cat' command output matches expected output.
+
+Testing 'pwd' command...
+'pwd' command output matches expected output.
+
+Testing 'mkdir' command...
+'mkdir' command output matches expected output.
+
+Testing 'cd' command...
+'cd' command output matches expected output.
+
+Testing 'rm' command...
+'rm' command successfully removed the file.
+
+----------------------------------
+=== Testing 'cp' command: file to another file ===
+Executing: cp source_file.txt copied_file.txt
+'cp' command successfully copied for scenario 'file to another file'.
+
+=== Testing 'cp' command: file to directory ===
+Executing: cp source_file.txt target_dir/
+'cp' command successfully copied for scenario 'file to directory'.
+
+=== Testing 'cp' command: file to dir/file ===
+Executing: cp source_file3.txt target_dir/source_file3.txt
+'cp' command successfully copied for scenario 'file to dir/file'.
+
+=== Testing 'cp' command: dir/file to current directory ===
+Executing: cp source_dir/current.txt ../test_pseudo_shell/
+'cp' command successfully copied for scenario 'dir/file to current directory'.
+
+=== Testing 'cp' command: dir/file to dir/file ===
+Executing: cp source_dir/source_file2.txt target_dir/file2.txt
+'cp' command successfully copied for scenario 'dir/file to dir/file'.
+
+=== Testing 'cp' command: file to subdir ===
+Executing: cp source_file.txt subdir/
+'cp' command successfully copied for scenario 'file to subdir'.
+
+----------------------------------
+----------------------------------
+=== Testing 'mv' command: file to another file ===
+Executing: mv source_file.txt moved_file.txt
+'mv' command successfully moved for scenario 'file to another file'.
+
+=== Testing 'mv' command: file to directory ===
+Executing: mv source_file.txt target_dir/
+'mv' command successfully moved for scenario 'file to directory'.
+
+=== Testing 'mv' command: file to dir/file ===
+Executing: mv source_file3.txt target_dir/moved_source_file3.txt
+'mv' command successfully moved for scenario 'file to dir/file'.
+
+=== Testing 'mv' command: dir/file to current directory ===
+Executing: mv source_dir/current.txt ./moved_current.txt
+'mv' command successfully moved for scenario 'dir/file to current directory'.
+
+=== Testing 'mv' command: dir/file to dir/file ===
+Executing: mv source_dir/source_file2.txt target_dir/moved_file2.txt
+'mv' command successfully moved for scenario 'dir/file to dir/file'.
+
+=== Testing 'mv' command: file to subdir ===
+Executing: mv hehe.txt subdir/
+'mv' command successfully moved for scenario 'file to subdir'.
+
+----------------------------------
+
+=== Testing Multiple Commands in the same line ===
+'multiple commands on the same line' command output matches expected output.
+
+=== Testing Error Handling ===
+Testing with invalid command...
+Checking for 'Error' in output for invalid command...
+Success: 'Error' detected for invalid command.
+
+Testing with too many arguments...
+Checking for 'Error' in output for too many arguments...
+Success: 'Error' detected for command with too many arguments.
+
+=== Testing File Mode ===
+Success: Output matches expected output.
+
+All tests completed.
