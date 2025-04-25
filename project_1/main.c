@@ -22,11 +22,9 @@ int main(int argc, char *argv[]) {
                 file_mode = 1;
                 i++;  
             } else {
-                fprintf(stderr, "Error: Missing filename after '-f'.\n");
                 exit(EXIT_FAILURE);
             }
         } else {
-            fprintf(stderr, "Usage: %s [-f filename]\n", argv[0]);
             exit(EXIT_FAILURE);
         }
     }
