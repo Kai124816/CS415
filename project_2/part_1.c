@@ -1,9 +1,9 @@
 #include<stdio.h>
 #include<string.h>
-#include <sys/types.h>
+#include<sys/types.h>
 #include<stdlib.h>
 #include<unistd.h>
-#include <sys/wait.h>
+#include<sys/wait.h>
 
 struct command {
     char** arg_array;
@@ -98,6 +98,7 @@ void free_command_array(struct command* command_array, int line_count){
     for(int i=0; i<line_count; i++){
         free_command(command_array[i]);
     }
+    free(command_array);
 }
 
 
@@ -114,7 +115,6 @@ int main(int argc, char** argv) {
 
     for (int i = 0; i < n; i++) {
         pid = fork();
-        pids[i] = pid;
         if (pid == 0) {
             // child process
             printf("I am the child process. My PID: %d\n", getpid());
@@ -128,6 +128,7 @@ int main(int argc, char** argv) {
             // parent process
             printf("I am the parent process. The child had PID: %d\n", pid);
             pids[i] = pid;
+            
         }
         else {
             perror("fork fail");
@@ -141,7 +142,6 @@ int main(int argc, char** argv) {
 
     free(pids);
     free_command_array(file_array,n);
-    free(file_array);
     return 0;
 }
 
