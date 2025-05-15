@@ -17,25 +17,56 @@ int count_args(char*input)
 }
 
 
-struct command create_command(char*input){
-    int num_args = count_args(input);
-    int i = 0;
-    char** parsed = (char**)malloc((num_args+1) * sizeof(char*));
-    char* token = strtok(input, " ");
+// struct command create_command(char*input){
+//     int num_args = count_args(input);
+//     int i = 0;
+//     char** parsed = (char**)malloc((num_args+1) * sizeof(char*));
+//     char* token = strtok(input, " ");
+//     struct command c1;
+
+//     while (token != NULL) {
+//         parsed[i] = (char*)malloc(strlen(token) + 1);
+//         strcpy(parsed[i], token);
+//         token = strtok(NULL, " ");
+//         i++;
+//     }
+    
+//     parsed[num_args] = NULL;
+//     c1.arg_array = parsed;
+//     c1.arg_count = num_args;
+//     return c1; 
+// }
+
+struct command create_command(char *input) {
     struct command c1;
+    int i = 0;
+
+    char *copy = strdup(input); // Make a copy because strtok modifies the string
+    char *token = strtok(copy, " \t\n");
+
+    // Estimate initial size
+    int capacity = 8;
+    char **parsed = malloc(capacity * sizeof(char *));
 
     while (token != NULL) {
-        parsed[i] = (char*)malloc(strlen(token) + 1);
-        strcpy(parsed[i], token);
-        token = strtok(NULL, " ");
+        if (i >= capacity) {
+            capacity *= 2;
+            parsed = realloc(parsed, capacity * sizeof(char *));
+        }
+
+        parsed[i] = strdup(token);  // mallocs and copies token
         i++;
+        token = strtok(NULL, " \t\n");
     }
-    
-    parsed[num_args] = NULL;
+
+    parsed[i] = NULL;
     c1.arg_array = parsed;
-    c1.arg_count = num_args;
-    return c1; 
+    c1.arg_count = i;
+
+    free(copy);
+    return c1;
 }
+
 
 
 void free_command(struct command c1){
