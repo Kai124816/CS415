@@ -13,6 +13,8 @@ int find_next_index();
 
 void print_array(int arr[], int size);
 
+void print_proc_info(pid_t pid);
+
 struct mcpstate{
     int finished_processes;
     int curr_index;
@@ -70,8 +72,7 @@ int main(int argc, char** argv) {
 
     signal(SIGALRM, alarm_handler);	
     alarm(1);
-    int count = 0;
-    while (count != 100 || c1.finished_processes < c1.num_processes) {
+    while (c1.finished_processes < c1.num_processes) {
         int status;
         pid_t result = waitpid(c1.pids[c1.curr_index], &status, WUNTRACED);
     
@@ -84,8 +85,10 @@ int main(int argc, char** argv) {
     
         if (WIFSTOPPED(status)) {
             printf("Process %d is paused\n", c1.pids[c1.curr_index]);
+            print_proc_info(c1.pids[c1.curr_index]);
         } else {
             printf("Process %d is finished\n", c1.pids[c1.curr_index]);
+            print_proc_info(c1.pids[c1.curr_index]);
             c1.finished_processes++;
             c1.finished[c1.curr_index] = 1;
             alarm(0);
@@ -109,8 +112,6 @@ int main(int argc, char** argv) {
             c1.finished_processes++;
             break;
         }
-    
-        count++;
     
         if (c1.finished_processes < c1.num_processes) {
             alarm(1);
@@ -169,4 +170,59 @@ void print_array(int arr[], int size) {
         }
     }
     printf("]\n");
+}
+
+
+void print_proc_info(pid_t pid) {
+    char path_stat[256], path_statm[256];
+    FILE *fstat = NULL, *fstatm = NULL;
+
+    // Format the file paths
+    snprintf(path_stat, sizeof(path_stat), "/proc/%d/stat", pid);
+    snprintf(path_statm, sizeof(path_statm), "/proc/%d/statm", pid);
+
+    // Open and read /proc/[pid]/stat
+    fstat = fopen(path_stat, "r");
+    if (!fstat) {
+        perror("fopen stat");
+        return;
+    }
+
+    int unused_pid, ppid;
+    char comm[256], state;
+    unsigned long utime, stime;
+
+    fscanf(fstat, "%d %c %c", &unused_pid, comm, &state);
+    for (int i = 0; i < 10; ++i) fscanf(fstat, "%*s"); // skip fields 4–13
+    fscanf(fstat, "%lu %lu", &utime, &stime);
+    for (int i = 0; i < 2; ++i) fscanf(fstat, "%*s"); // skip cutime and cstime
+    fscanf(fstat, "%d", &ppid); // parent PID (17th field in total)
+
+    fclose(fstat);
+
+    // Open and read /proc/[pid]/statm
+    fstatm = fopen(path_statm, "r");
+    if (!fstatm) {
+        perror("fopen statm");
+        return;
+    }
+
+    long total_pages, resident_pages;
+    fscanf(fstatm, "%ld %ld", &total_pages, &resident_pages);
+    fclose(fstatm);
+
+    // Convert values
+    long page_size_kb = sysconf(_SC_PAGESIZE) / 1024;  // in KB
+    long clock_ticks = sysconf(_SC_CLK_TCK);
+    double cpu_time = (utime + stime) / (double)clock_ticks;
+    long memory_kb = resident_pages * page_size_kb;
+
+    // Print info
+    printf("----- Process Info (PID %d) -----\n", pid);
+    printf("Command:         %s\n", comm);
+    printf("State:           %c\n", state);
+    printf("Parent PID:      %d\n", ppid);
+    printf("CPU Time:        %.2f seconds\n", cpu_time);
+    printf("Memory Usage:    %ld KB\n", memory_kb);
+    printf("----------------------------------\n\n");
 }
