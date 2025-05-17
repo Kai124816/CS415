@@ -58,7 +58,8 @@ int main(int argc, char** argv) {
             printf("process with pid %d wating to launch\n",getpid());
             sigwait(&set, &sig);
             if (execvp(file_array[i].arg_array[0], file_array[i].arg_array) == -1) {
-                exit(EXIT_FAILURE);    
+                perror("execvp failed");  
+                exit(EXIT_FAILURE); 
             }
         }
         else if(pid > 0){
