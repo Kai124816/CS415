@@ -249,25 +249,3 @@ int print_proc_info(pid_t pid) {
     
     return time_slice;
 }
-
-int update_cpu_stats(pid_t pid){
-    char path[64];
-    sprintf(path, "/proc/%d/stat", pid);
-    FILE* fp = fopen(path, "r");
-    if (!fp) return 1;
-   
-    //hold the parsed data
-    long utime_ticks = 0, stime_ticks = 0;
-    int dummy;
-    char comm[256], state;
-
-    fscanf(fp, "%d %s %c", &dummy, comm, &state);
-    // Skip to field 14 (utime) and 15 (stime)
-    for (int j = 0; j < 11; j++) fscanf(fp, "%*s"); // Skip next 11 fields
-
-    fscanf(fp, "%ld %ld", &utime_ticks, &stime_ticks);
-    fclose(fp);
-
-    double total_sec = (utime_ticks + stime_ticks) / (double)sysconf(_SC_CLK_TCK);
-    return (int)(total_sec + 1);
-}

@@ -89,7 +89,6 @@ int main(int argc, char** argv) {
     
         if (WIFSTOPPED(status)) {
             printf("Process %d is paused\n", c1.pids[c1.curr_index]);
-            print_proc_info(c1.pids[c1.curr_index]);
         } else {
             printf("Process %d is finished\n", c1.pids[c1.curr_index]);
             c1.finished_processes++;
