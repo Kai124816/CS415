@@ -21,10 +21,9 @@ struct command create_command(char *input) {
     struct command c1;
     int i = 0;
 
-    char *copy = strdup(input); // Make a copy because strtok modifies the string
+    char *copy = strdup(input); 
     char *token = strtok(copy, " \t\n");
 
-    // Estimate initial size
     int capacity = 8;
     char **parsed = malloc(capacity * sizeof(char *));
 

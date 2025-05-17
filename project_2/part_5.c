@@ -5,6 +5,7 @@
 #include<unistd.h>
 #include<sys/wait.h>
 #include<signal.h>
+#include <time.h>
 #include "MCP.h"
 
 void alarm_handler();
@@ -13,6 +14,8 @@ int find_next_index();
 
 void print_array(int arr[], int size);
 
+int print_proc_info(pid_t pid);
+
 struct mcpstate{
     int finished_processes;
     int curr_index;
@@ -20,6 +23,7 @@ struct mcpstate{
     int* pids;
     int* started;
     int* finished;
+    int* es_times;
 };
 
 struct mcpstate c1;
@@ -37,6 +41,7 @@ int main(int argc, char** argv) {
     c1.pids = malloc(sizeof(pid_t) * c1.num_processes);
     c1.started = (int*)calloc(c1.num_processes, sizeof(int));
     c1.finished = (int*)calloc(c1.num_processes, sizeof(int));
+    c1.es_times = (int*)calloc(c1.num_processes, sizeof(int));
     struct command* file_array = read_file(argv[1],c1.num_processes);
     pid_t pid; 
     pid_t parent = getpid();
@@ -66,8 +71,12 @@ int main(int argc, char** argv) {
 
     kill(c1.pids[0],SIGUSR1);
     c1.started[0] = 1;
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock(); 
     printf("launching process: %d\n",c1.pids[0]);
 
+    int cycle = 1;
     signal(SIGALRM, alarm_handler);	
     alarm(1);
     while (c1.finished_processes < c1.num_processes) {
@@ -83,6 +92,7 @@ int main(int argc, char** argv) {
     
         if (WIFSTOPPED(status)) {
             printf("Process %d is paused\n", c1.pids[c1.curr_index]);
+            print_proc_info(c1.pids[c1.curr_index]);
         } else {
             printf("Process %d is finished\n", c1.pids[c1.curr_index]);
             c1.finished_processes++;
@@ -108,17 +118,34 @@ int main(int argc, char** argv) {
             c1.finished_processes++;
             break;
         }
-    
-        if (c1.finished_processes < c1.num_processes) {
-            alarm(1);
+        
+        printf("Cycle: %d ----------------------\n",cycle);
+        for(int i=0; i < c1.num_processes; i++)
+        {   
+            if(c1.finished[i] != 1)
+            {
+                int time_slice = print_proc_info(c1.pids[i]);
+                c1.es_times[i] = time_slice;
+            }
+        }
+        printf("--------------------------------\n");
+        cycle++;
+
+        if (c1.finished_processes < c1.num_processes) 
+        {
+            alarm(c1.es_times[c1.curr_index]);
         }
     }
-    
+
     printf("process %d finished - all processes finished\n",c1.pids[c1.curr_index]);
+    end = clock();
+    cpu_time_used = ((double) (end - start)/1000);
+    printf("Time taken: %f seconds\n", cpu_time_used);
     
     free(c1.pids);
     free(c1.finished);
     free(c1.started);
+    free(c1.es_times);
     free_command_array(file_array,c1.num_processes);
     return 0;
 }
@@ -126,7 +153,7 @@ int main(int argc, char** argv) {
 
 void alarm_handler(){
     printf("current process: %d\n",c1.pids[c1.curr_index]);
-    if(c1.finished[c1.curr_index] == 0)
+    if(c1.finished[c1.curr_index] == 0 && c1.finished_processes < c1.num_processes-1)
     {
         kill(c1.pids[c1.curr_index],SIGSTOP);
     }
@@ -166,4 +193,81 @@ void print_array(int arr[], int size) {
         }
     }
     printf("]\n");
+}
+
+
+int print_proc_info(pid_t pid) {
+    char path_stat[256], path_statm[256];
+    FILE *fstat = NULL, *fstatm = NULL;
+
+    snprintf(path_stat, sizeof(path_stat), "/proc/%d/stat", pid);
+    snprintf(path_statm, sizeof(path_statm), "/proc/%d/statm", pid);
+
+    fstat = fopen(path_stat, "r");
+    if (!fstat) {
+        perror("fopen stat");
+        return;
+    }
+
+    int unused_pid, ppid;
+    char comm[256], state;
+    unsigned long utime, stime;
+
+    fscanf(fstat, "%d (%[^)]) %c", &unused_pid, comm, &state);
+    for (int i = 0; i < 10; ++i) fscanf(fstat, "%*s"); 
+    fscanf(fstat, "%lu %lu", &utime, &stime);
+    for (int i = 0; i < 2; ++i) fscanf(fstat, "%*s"); 
+    fscanf(fstat, "%d", &ppid); 
+
+    fclose(fstat);
+
+    fstatm = fopen(path_statm, "r");
+    if (!fstatm) {
+        perror("fopen statm");
+        return;
+    }
+
+    long total_pages, resident_pages;
+    fscanf(fstatm, "%ld %ld", &total_pages, &resident_pages);
+    fclose(fstatm);
+
+    // Convert values
+    long page_size_kb = sysconf(_SC_PAGESIZE) / 1024;  // in KB
+    long clock_ticks = sysconf(_SC_CLK_TCK);
+    double cpu_time = (utime + stime) / (double)clock_ticks;
+    long memory_kb = resident_pages * page_size_kb;
+    double total_sec = (utime + stime) / (double)sysconf(_SC_CLK_TCK);
+    int time_slice = (int)(total_sec + 1);
+    if(time_slice > 10)
+    {
+        time_slice = 10;
+    }
+
+    // Print info
+    printf("PID: %d, Parent PID: %d, CMD: %s, State: %c, CPU Time: %lu (utime) + %lu (stime), Memory(kb): %ld Time Slice: %d\n",
+           pid, ppid, comm, state, utime, stime, memory_kb,time_slice);
+    
+    return time_slice;
+}
+
+int update_cpu_stats(pid_t pid){
+    char path[64];
+    sprintf(path, "/proc/%d/stat", pid);
+    FILE* fp = fopen(path, "r");
+    if (!fp) return 1;
+   
+    //hold the parsed data
+    long utime_ticks = 0, stime_ticks = 0;
+    int dummy;
+    char comm[256], state;
+
+    fscanf(fp, "%d %s %c", &dummy, comm, &state);
+    // Skip to field 14 (utime) and 15 (stime)
+    for (int j = 0; j < 11; j++) fscanf(fp, "%*s"); // Skip next 11 fields
+
+    fscanf(fp, "%ld %ld", &utime_ticks, &stime_ticks);
+    fclose(fp);
+
+    double total_sec = (utime_ticks + stime_ticks) / (double)sysconf(_SC_CLK_TCK);
+    return (int)(total_sec + 1);
 }

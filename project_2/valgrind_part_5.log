@@ -1,0 +1,31 @@
+==1996712== Memcheck, a memory error detector
+==1996712== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1996712== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1996712== Command: ./part_5 input.txt
+==1996712== Parent PID: 1911165
+==1996712== 
+==1996715== 
+==1996715== HEAP SUMMARY:
+==1996715==     in use at exit: 558 bytes in 24 blocks
+==1996715==   total heap usage: 34 allocs, 10 frees, 18,992 bytes allocated
+==1996715== 
+==1996715== LEAK SUMMARY:
+==1996715==    definitely lost: 0 bytes in 0 blocks
+==1996715==    indirectly lost: 0 bytes in 0 blocks
+==1996715==      possibly lost: 0 bytes in 0 blocks
+==1996715==    still reachable: 558 bytes in 24 blocks
+==1996715==         suppressed: 0 bytes in 0 blocks
+==1996715== Reachable blocks (those to which a pointer was found) are not shown.
+==1996715== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==1996715== 
+==1996715== For lists of detected and suppressed errors, rerun with: -s
+==1996715== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1996712== 
+==1996712== HEAP SUMMARY:
+==1996712==     in use at exit: 0 bytes in 0 blocks
+==1996712==   total heap usage: 142 allocs, 142 frees, 99,776 bytes allocated
+==1996712== 
+==1996712== All heap blocks were freed -- no leaks are possible
+==1996712== 
+==1996712== For lists of detected and suppressed errors, rerun with: -s
+==1996712== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
