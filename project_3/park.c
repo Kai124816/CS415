@@ -61,8 +61,15 @@ int main(int argc, char *argv[]) {
     sleep(58);
 
     stop = 1;
-    sleep(3);
     print_elapsed_time();
-    printf("passengers exiting park\n");
+    printf("passengers have started to exit the park\n");
+    for (int i = 0; i < num_passengers; ++i)
+    {
+		pthread_join(passenger_id_array[i], NULL);			
+	}
+    for (int i = 0; i < num_cars; ++i)
+    {
+		pthread_join(car_id_array[i], NULL);			
+	}
     cleanup();
 }

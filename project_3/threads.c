@@ -14,18 +14,20 @@
 //variable definitions
 int stop = 0;
 int ready_to_load = 0;
-int ready_to_unboard = 0;
 int loading_capacity = 1;
 int num_cars = 1;
 int num_passengers = 1;
 int waiting_time = 10;
 int duration = 10;
 int* rounds_array = NULL;
+int* ready_to_unboard = NULL;
 Queue* ticket_queue = NULL;
 Queue* ride_queue = NULL;
 Queue* car_queue = NULL;
 Car** car_array = NULL;
 passenger_cond** cond_array = NULL;
+pthread_t* passenger_id_array = NULL;
+pthread_t* car_id_array = NULL;
 pthread_mutex_t ticket_line_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t car_queue_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t increment_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -41,16 +43,14 @@ void printArray(int arr[], int size) {
 //Passenger Functionality
 void create_passenger_threads(int num_threads)
 {
-    pthread_t* thread_array = (pthread_t*)malloc(num_threads * sizeof(pthread_t));
+    passenger_id_array = (pthread_t*)malloc(num_threads * sizeof(pthread_t));
 
     for (int i = 0; i < num_threads; i++) 
     {
         int* tid = malloc(sizeof(int));
         *tid = i;   
-        pthread_create(&thread_array[i], NULL, passenger_routine, tid);
+        pthread_create(&passenger_id_array[i], NULL, passenger_routine, tid);
     }
-
-    free(thread_array);
 }
 
 
@@ -70,7 +70,10 @@ void* passenger_routine(void* arg)
         rounds_array[*thread_id]++;
     }
 
+    print_elapsed_time();
+    printf("Passenger %d is exiting the park\n",*thread_id);
     free(arg);
+    pthread_exit(NULL);
     return NULL;
 }
 
@@ -86,7 +89,7 @@ void explore_park(int id)
     pthread_mutex_unlock(&ticket_line_lock);
     print_elapsed_time();
     printf("Passenger %d is getting in the ticket line\n",id);
-    if(stop){pthread_exit(NULL);}
+    if(stop){return;}
 }
 
 
@@ -104,7 +107,7 @@ void wait_for_ticket(int id)
     dequeue(ticket_queue);
     print_elapsed_time();
     printf("Passenger %d joined the ride queue\n",id);
-    if(stop){pthread_exit(NULL);}
+    if(stop){return;}
 }
 
 
@@ -116,35 +119,33 @@ void wait_for_ride(int id)
     }
     pthread_mutex_unlock(&cond_array[id]->board_lock);
     ready_to_load = 0;
-    if(stop){pthread_exit(NULL);}
+    if(stop){return;}
 }
 
 
 void ride_car(int id)
 {
     pthread_mutex_lock(&cond_array[id]->unboard_lock);
-    while (!ready_to_unboard && !stop){
+    while (!ready_to_unboard[id] && !stop){
         pthread_cond_wait(&cond_array[id]->unboard_cond, &cond_array[id]->unboard_lock);
     }
     pthread_mutex_unlock(&cond_array[id]->unboard_lock);
-    ready_to_unboard = 0;
-    if(stop){pthread_exit(NULL);}
+    ready_to_unboard[id] = 0;
+    if(stop){return;}
 }
 
 
 //Car Functionality
 void create_car_threads(int num_cars)
 {
-    pthread_t* thread_array = malloc(num_cars * sizeof(pthread_t));
+    car_id_array = malloc(num_cars * sizeof(pthread_t));
 
     for (int i = 0; i < num_cars; i++) 
     {
         int* tid = malloc(sizeof(int));
         *tid = i;   
-        pthread_create(&thread_array[i], NULL, car_routine, tid);
+        pthread_create(&car_id_array[i], NULL, car_routine, tid);
     }
-
-    free(thread_array);
 }
 
 
@@ -152,7 +153,7 @@ void* car_routine(void* arg)
 {
     int *thread_id = (int*)arg;	
 
-    while(1)
+    while(!stop)
     {
         wait_car(*thread_id);
         load(*thread_id);
@@ -161,6 +162,7 @@ void* car_routine(void* arg)
     }
 
     free(arg);
+    pthread_exit(NULL);
     return NULL;
 }
 
@@ -171,6 +173,7 @@ void wait_car(int id)
     enqueue(car_queue,id);
     pthread_mutex_unlock(&car_queue_lock);
     while(peek(car_queue) != id){sleep(1);}
+    if(stop){return;}
 }
 
 
@@ -200,19 +203,18 @@ void load(int id)
         clock_t end = clock(); // Record end time
         cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     }
-    if(stop){pthread_exit(NULL);}
     dequeue(car_queue);
 }
 
 
 void ride(int id)
 {   
+    if(stop){return;}
     car_array[id]->loading = 0;
     car_array[id]->running = 1;
     print_elapsed_time();
     printf("car %d is running\n",id);
     sleep(duration);
-    if(stop){pthread_exit(NULL);}
 }
 
 
@@ -220,17 +222,17 @@ void unload(int id)
 {
     print_elapsed_time();
     printf("car %d is unloading\n",id);
-    while(peek(car_array[id]->passengers) != -1 && !stop)
+    while(peek(car_array[id]->passengers) != -1)
     {
         int p1 = dequeue(car_array[id]->passengers);
         pthread_mutex_lock(&cond_array[p1]->unboard_lock);
-        ready_to_unboard = 1; 
+        ready_to_unboard[p1] = 1; 
         pthread_cond_signal(&cond_array[p1]->unboard_cond); 
         pthread_mutex_unlock(&cond_array[p1]->unboard_lock);
         print_elapsed_time();
         printf("Passenger %d unboarded car %d\n",p1,id);
     }
-    if(stop){pthread_exit(NULL);}
+    if(stop){return;}
     car_array[id]->capacity = loading_capacity;
     car_array[id]->loading = 0;
     car_array[id]->running = 0;
@@ -241,6 +243,7 @@ void unload(int id)
 void initializer()
 {
     rounds_array = (int*)calloc(num_passengers,sizeof(int));
+    ready_to_unboard = (int*)calloc(num_passengers,sizeof(int));
     ticket_queue = (Queue*)malloc(sizeof(Queue));
     ride_queue = (Queue*)malloc(sizeof(Queue));
     car_queue = (Queue*)malloc(sizeof(Queue));
@@ -271,11 +274,17 @@ int check_to_stop()
 void cleanup()
 {
     free(rounds_array);
+    free(ready_to_unboard);
     free(ticket_queue);
     free(ride_queue);
     free(car_queue);
+    free(passenger_id_array);
+    free(car_id_array);
     free_car_array(car_array, num_cars);
     free_cond_array(cond_array,num_passengers);
+    pthread_mutex_destroy(&ticket_line_lock);
+    pthread_mutex_destroy(&car_queue_lock);
+    pthread_mutex_destroy(&increment_lock);
 }
 
 
