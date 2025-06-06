@@ -14,15 +14,40 @@
 
 int main(int argc, char *argv[]) {
     int option;
-    while ((option = getopt(argc, argv, ":n:c:p:w:r:")) != -1) {
+    while ((option = getopt(argc, argv, ":n:c:p:w:r:h")) != -1) {
         switch (option) {
-            case 'n': num_passengers = atoi(optarg); break;
-            case 'c': num_cars = atoi(optarg); break;
-            case 'p': loading_capacity = atoi(optarg); break;
-            case 'w': waiting_time = atoi(optarg); break;
-            case 'r': duration = atoi(optarg); break;
-            case ':': fprintf(stderr, "Option -%c requires a value\n", optopt); break;
-            case '?': fprintf(stderr, "Unknown option: -%c\n", optopt); break;
+            case 'n':
+                num_passengers = atoi(optarg);
+                break;
+            case 'c':
+                num_cars = atoi(optarg);
+                break;
+            case 'p':
+                loading_capacity = atoi(optarg);
+                break;
+            case 'w':
+                waiting_time = atoi(optarg);
+                break;
+            case 'r':
+                duration = atoi(optarg);
+                break;
+            case 'h':
+                printf("USAGE:\n");
+                printf("  ./park [OPTIONS]\n\n");
+                printf("OPTIONS:\n");
+                printf("  -n INT    Number of passenger threads\n");
+                printf("  -c INT    Number of cars\n");
+                printf("  -p INT    Capacity per car\n");
+                printf("  -w INT    Car waiting period in seconds\n");
+                printf("  -r INT    Ride duration in seconds\n");
+                printf("  -h        Display this help message\n");
+                exit(0); 
+            case ':':
+                fprintf(stderr, "Option -%c requires a value\n", optopt);
+                break;
+            case '?':
+                fprintf(stderr, "Unknown option: -%c\n", optopt);
+                break;
         }
     }
     for(; optind < argc; optind++) {
@@ -57,9 +82,10 @@ int main(int argc, char *argv[]) {
 
         char buffer[8192];
         ssize_t bytes_read;
-        while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer)-1)) > 0) {
-            buffer[bytes_read] = '\0';
-            printf("%s", buffer);  
+        while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer) - 1)) > 0) {
+            buffer[bytes_read] = '\0';        
+            fputs(buffer, stdout);            
+            fflush(stdout);                   
         }
         close(pipe_fd[0]);
         exit(0);

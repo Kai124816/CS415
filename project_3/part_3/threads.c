@@ -38,6 +38,7 @@ pthread_mutex_t print_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t ticket_line_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t car_queue_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t increment_lock = PTHREAD_MUTEX_INITIALIZER;
+sem_t sem; 
 
 
 //Passenger Functionality
@@ -62,8 +63,8 @@ void* passenger_routine(void* arg)
     pthread_mutex_lock(&print_lock);
     print_elapsed_time();
     printf("Passenger %d has entered the park\n",thread_id);
-    pthread_mutex_unlock(&print_lock);
     in_park++;
+    pthread_mutex_unlock(&print_lock);
 
     while(1)
     {
@@ -228,6 +229,7 @@ void load(int id)
             print_elapsed_time();
             printf("Passenger %d boarded car %d\n",p1,id);
             pthread_mutex_unlock(&print_lock);
+            if(in_park == 1){break;}
         }
         else{sleep(1);}
         clock_t end = clock(); // Record end time
@@ -361,10 +363,10 @@ void print_final_stats(int pipe_fd) {
     snprintf(line, sizeof(line), "Total rides completed: %d\n", total_rides);
     strcat(buffer, line);
 
-    snprintf(line, sizeof(line), "Average wait time in ticket queue: %.2f seconds\n", average_wait_time(ticket_wait));
+    snprintf(line, sizeof(line), "Average wait time in ticket queue: %.3f seconds\n", average_wait_time(ticket_wait));
     strcat(buffer, line);
 
-    snprintf(line, sizeof(line), "Average wait time in ride queue: %.2f seconds\n", average_wait_time(car_wait));
+    snprintf(line, sizeof(line), "Average wait time in ride queue: %.3f seconds\n", average_wait_time(car_wait));
     strcat(buffer, line);
 
     snprintf(line, sizeof(line), "Average car utilization: %.2f%%\n", average_utilization(util) * 100);
@@ -397,6 +399,7 @@ void initializer()
     initialize_waittime(ticket_wait);
     initialize_waittime(car_wait);
     initialzie_car_util(util);
+    sem_init(&sem, 0, 5); 
 }
 
 
@@ -417,6 +420,7 @@ void cleanup()
     pthread_mutex_destroy(&ticket_line_lock);
     pthread_mutex_destroy(&car_queue_lock);
     pthread_mutex_destroy(&increment_lock);
+    sem_destroy(&sem);
 }
 
 

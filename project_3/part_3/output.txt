@@ -1,9 +1,69 @@
 
 ----- DUCK PARK SIMULATION -----
 [Monitor] Simulation started with parameters:
-- Number of passenger threads: 10
-- Number of cars: 3
-- Capacity per car: 3
+- Number of passenger threads: 30
+- Number of cars: 4
+- Capacity per car: 6
+- Park Exploration Time: 2-5 seconds
+- Car waiting period: 8
+- Ride duration: 10 seconds
+
+
+[Monitor] System State at 00:00:05
+Ticket queue: [Passenger 0, Passenger 1, Passenger 2]
+Ride queue: []
+Car 0 Status: LOADING (0/6 passengers)
+Car 1 Status: WAITING (0/6 passengers)
+Car 2 Status: WAITING (0/6 passengers)
+Car 3 Status: WAITING (0/6 passengers)
+Passengers in park: 6 (3 exploring, 3 in queues, 0 on rides)
+
+
+[Monitor] System State at 00:00:10
+Ticket queue: [Passenger 2, Passenger 4, Passenger 3, Passenger 7, Passenger 5, Passenger 6]
+Ride queue: []
+Car 0 Status: LOADING (2/6 passengers)
+Car 1 Status: WAITING (0/6 passengers)
+Car 2 Status: WAITING (0/6 passengers)
+Car 3 Status: WAITING (0/6 passengers)
+Passengers in park: 11 (3 exploring, 6 in queues, 2 on rides)
+
+
+[Monitor] System State at 00:00:15
+Ticket queue: [Passenger 3, Passenger 7, Passenger 5, Passenger 6, Passenger 8, Passenger 9, Passenger 10]
+Ride queue: []
+Car 0 Status: LOADING (4/6 passengers)
+Car 1 Status: WAITING (0/6 passengers)
+Car 2 Status: WAITING (0/6 passengers)
+Car 3 Status: WAITING (0/6 passengers)
+Passengers in park: 16 (5 exploring, 7 in queues, 4 on rides)
+
+
+[Monitor] System State at 00:00:21
+Ticket queue: [Passenger 5, Passenger 6, Passenger 8, Passenger 9, Passenger 10, Passenger 11, Passenger 12, Passenger 13, Passenger 16, Passenger 14, Passenger 15, Passenger 18]
+Ride queue: []
+Car 0 Status: RUNNING (6/6 passengers)
+Car 1 Status: WAITING (0/6 passengers)
+Car 2 Status: LOADING (0/6 passengers)
+Car 3 Status: WAITING (0/6 passengers)
+Passengers in park: 21 (3 exploring, 12 in queues, 6 on rides)
+
+
+[Monitor] System State at 00:00:26
+Ticket queue: [Passenger 9, Passenger 10, Passenger 11, Passenger 12, Passenger 13, Passenger 16, Passenger 14, Passenger 15, Passenger 18, Passenger 17, Passenger 19, Passenger 21, Passenger 20]
+Ride queue: []
+Car 0 Status: RUNNING (6/6 passengers)
+Car 1 Status: WAITING (0/6 passengers)
+Car 2 Status: LOADING (3/6 passengers)
+Car 3 Status: WAITING (0/6 passengers)
+Passengers in park: 26 (4 exploring, 13 in queues, 9 on rides)
+
+
+----- DUCK PARK SIMULATION -----
+[Monitor] Simulation started with parameters:
+- Number of passenger threads: 30
+- Number of cars: 4
+- Capacity per car: 6
 - Park Exploration Time: 2-5 seconds
 - Car waiting period: 8
 - Ride duration: 10 seconds
@@ -32,9 +92,9 @@
 [Time: 00:00:06] Passenger 6 is exploring_park
 [Time: 00:00:07] Passenger 0 acquired ticket
 [Time: 00:00:07] Passenger 0 joined the ride queue
+[Time: 00:00:07] Passenger 1 is acquiring ticket
 [Time: 00:00:07] Passenger 7 has entered the park
 [Time: 00:00:07] Passenger 7 is exploring_park
-[Time: 00:00:07] Passenger 1 is acquiring ticket
 [Time: 00:00:07] Passenger 4 is getting in the ticket line
 [Time: 00:00:07] Passenger 4 waiting in line for ticket
 [Time: 00:00:07] Passenger 0 boarded car 0
@@ -42,10 +102,10 @@
 [Time: 00:00:08] Passenger 3 waiting in line for ticket
 [Time: 00:00:08] Passenger 8 has entered the park
 [Time: 00:00:08] Passenger 8 is exploring_park
-[Time: 00:00:09] Passenger 7 is getting in the ticket line
-[Time: 00:00:09] Passenger 7 waiting in line for ticket
 [Time: 00:00:09] Passenger 1 acquired ticket
 [Time: 00:00:09] Passenger 1 joined the ride queue
+[Time: 00:00:09] Passenger 7 is getting in the ticket line
+[Time: 00:00:09] Passenger 7 waiting in line for ticket
 [Time: 00:00:09] Passenger 9 has entered the park
 [Time: 00:00:09] Passenger 9 is exploring_park
 [Time: 00:00:09] Passenger 2 is acquiring ticket
@@ -54,201 +114,140 @@
 [Time: 00:00:10] Passenger 5 waiting in line for ticket
 [Time: 00:00:10] Passenger 6 is getting in the ticket line
 [Time: 00:00:10] Passenger 6 waiting in line for ticket
-[Time: 00:00:11] Passenger 8 is getting in the ticket line
-[Time: 00:00:11] Passenger 8 waiting in line for ticket
+[Time: 00:00:10] Passenger 10 has entered the park
+[Time: 00:00:10] Passenger 10 is exploring_park
 [Time: 00:00:11] Passenger 2 acquired ticket
 [Time: 00:00:11] Passenger 2 joined the ride queue
+[Time: 00:00:11] Passenger 11 has entered the park
+[Time: 00:00:11] Passenger 11 is exploring_park
+[Time: 00:00:11] Passenger 8 is getting in the ticket line
+[Time: 00:00:11] Passenger 8 waiting in line for ticket
 [Time: 00:00:11] Passenger 4 is acquiring ticket
 [Time: 00:00:11] Passenger 2 boarded car 0
-[Time: 00:00:11] car 0 is running
 [Time: 00:00:12] Passenger 9 is getting in the ticket line
 [Time: 00:00:12] Passenger 9 waiting in line for ticket
-[Time: 00:00:12] car 1 invoked load()
+[Time: 00:00:12] Passenger 12 has entered the park
+[Time: 00:00:12] Passenger 12 is exploring_park
+[Time: 00:00:13] Passenger 13 has entered the park
+[Time: 00:00:13] Passenger 13 is exploring_park
 [Time: 00:00:13] Passenger 4 acquired ticket
 [Time: 00:00:13] Passenger 4 joined the ride queue
-[Time: 00:00:13] Passenger 4 boarded car 1
+[Time: 00:00:13] Passenger 4 boarded car 0
 [Time: 00:00:14] Passenger 3 is acquiring ticket
+[Time: 00:00:14] Passenger 10 is getting in the ticket line
+[Time: 00:00:14] Passenger 10 waiting in line for ticket
+[Time: 00:00:14] Passenger 14 has entered the park
+[Time: 00:00:14] Passenger 14 is exploring_park
+[Time: 00:00:15] Passenger 15 has entered the park
+[Time: 00:00:15] Passenger 15 is exploring_park
 [Time: 00:00:16] Passenger 3 acquired ticket
 [Time: 00:00:16] Passenger 3 joined the ride queue
+[Time: 00:00:16] Passenger 11 is getting in the ticket line
+[Time: 00:00:16] Passenger 11 waiting in line for ticket
+[Time: 00:00:16] Passenger 12 is getting in the ticket line
+[Time: 00:00:16] Passenger 12 waiting in line for ticket
 [Time: 00:00:16] Passenger 7 is acquiring ticket
-[Time: 00:00:16] Passenger 3 boarded car 1
+[Time: 00:00:16] Passenger 16 has entered the park
+[Time: 00:00:16] Passenger 16 is exploring_park
+[Time: 00:00:16] Passenger 3 boarded car 0
+[Time: 00:00:17] Passenger 17 has entered the park
+[Time: 00:00:17] Passenger 17 is exploring_park
+[Time: 00:00:18] Passenger 13 is getting in the ticket line
+[Time: 00:00:18] Passenger 13 waiting in line for ticket
+[Time: 00:00:18] Passenger 16 is getting in the ticket line
+[Time: 00:00:18] Passenger 16 waiting in line for ticket
 [Time: 00:00:18] Passenger 7 acquired ticket
 [Time: 00:00:18] Passenger 7 joined the ride queue
-[Time: 00:00:18] Passenger 5 is acquiring ticket
-[Time: 00:00:18] Passenger 7 boarded car 1
-[Time: 00:00:18] car 1 is running
+[Time: 00:00:18] Passenger 18 has entered the park
+[Time: 00:00:18] Passenger 18 is exploring_park
+[Time: 00:00:18] Passenger 7 boarded car 0
+[Time: 00:00:18] car 0 is running
+[Time: 00:00:19] Passenger 14 is getting in the ticket line
+[Time: 00:00:19] Passenger 14 waiting in line for ticket
+[Time: 00:00:19] Passenger 15 is getting in the ticket line
+[Time: 00:00:19] Passenger 15 waiting in line for ticket
+[Time: 00:00:19] Passenger 5 is acquiring ticket
+[Time: 00:00:19] Passenger 19 has entered the park
+[Time: 00:00:19] Passenger 19 is exploring_park
 [Time: 00:00:19] car 2 invoked load()
-[Time: 00:00:20] Passenger 5 acquired ticket
-[Time: 00:00:20] Passenger 5 joined the ride queue
-[Time: 00:00:20] Passenger 6 is acquiring ticket
-[Time: 00:00:20] Passenger 5 boarded car 2
-[Time: 00:00:21] car 0 is unloading
-[Time: 00:00:21] Passenger 0 unboarded car 0
-[Time: 00:00:21] Passenger 1 unboarded car 0
-[Time: 00:00:21] Passenger 2 unboarded car 0
-[Time: 00:00:21] Passenger 0 is exploring_park
-[Time: 00:00:21] Passenger 1 is exploring_park
-[Time: 00:00:21] Passenger 2 is exploring_park
-[Time: 00:00:22] Passenger 6 acquired ticket
-[Time: 00:00:22] Passenger 6 joined the ride queue
-[Time: 00:00:22] Passenger 8 is acquiring ticket
-[Time: 00:00:22] Passenger 6 boarded car 2
-[Time: 00:00:24] Passenger 8 acquired ticket
-[Time: 00:00:24] Passenger 8 joined the ride queue
-[Time: 00:00:24] Passenger 9 is acquiring ticket
-[Time: 00:00:24] Passenger 8 boarded car 2
-[Time: 00:00:24] car 2 is running
-[Time: 00:00:25] Passenger 0 is getting in the ticket line
-[Time: 00:00:25] Passenger 0 waiting in line for ticket
-[Time: 00:00:25] Passenger 2 is getting in the ticket line
-[Time: 00:00:25] Passenger 2 waiting in line for ticket
-[Time: 00:00:25] car 0 invoked load()
-[Time: 00:00:26] Passenger 1 is getting in the ticket line
-[Time: 00:00:26] Passenger 1 waiting in line for ticket
-[Time: 00:00:26] Passenger 9 acquired ticket
-[Time: 00:00:26] Passenger 9 joined the ride queue
-[Time: 00:00:27] Passenger 0 is acquiring ticket
-[Time: 00:00:27] Passenger 9 boarded car 0
-[Time: 00:00:28] car 1 is unloading
-[Time: 00:00:28] Passenger 4 unboarded car 1
-[Time: 00:00:28] Passenger 3 unboarded car 1
-[Time: 00:00:28] Passenger 7 unboarded car 1
+[Time: 00:00:20] Passenger 20 has entered the park
+[Time: 00:00:20] Passenger 20 is exploring_park
+[Time: 00:00:20] Passenger 18 is getting in the ticket line
+[Time: 00:00:20] Passenger 18 waiting in line for ticket
+[Time: 00:00:21] Passenger 17 is getting in the ticket line
+[Time: 00:00:21] Passenger 17 waiting in line for ticket
+[Time: 00:00:21] Passenger 5 acquired ticket
+[Time: 00:00:21] Passenger 5 joined the ride queue
+[Time: 00:00:21] Passenger 19 is getting in the ticket line
+[Time: 00:00:21] Passenger 19 waiting in line for ticket
+[Time: 00:00:21] Passenger 6 is acquiring ticket
+[Time: 00:00:21] Passenger 21 has entered the park
+[Time: 00:00:21] Passenger 21 is exploring_park
+[Time: 00:00:21] Passenger 5 boarded car 2
+[Time: 00:00:22] Passenger 22 has entered the park
+[Time: 00:00:22] Passenger 22 is exploring_park
+[Time: 00:00:23] Passenger 6 acquired ticket
+[Time: 00:00:23] Passenger 6 joined the ride queue
+[Time: 00:00:23] Passenger 23 has entered the park
+[Time: 00:00:23] Passenger 23 is exploring_park
+[Time: 00:00:23] Passenger 21 is getting in the ticket line
+[Time: 00:00:23] Passenger 21 waiting in line for ticket
+[Time: 00:00:23] Passenger 8 is acquiring ticket
+[Time: 00:00:23] Passenger 6 boarded car 2
+[Time: 00:00:24] Passenger 24 has entered the park
+[Time: 00:00:24] Passenger 24 is exploring_park
+[Time: 00:00:25] Passenger 20 is getting in the ticket line
+[Time: 00:00:25] Passenger 20 waiting in line for ticket
+[Time: 00:00:25] Passenger 25 has entered the park
+[Time: 00:00:25] Passenger 25 is exploring_park
+[Time: 00:00:25] Passenger 8 acquired ticket
+[Time: 00:00:25] Passenger 8 joined the ride queue
+[Time: 00:00:25] Passenger 8 boarded car 2
+[Time: 00:00:26] Passenger 23 is getting in the ticket line
+[Time: 00:00:26] Passenger 23 waiting in line for ticket
+[Time: 00:00:26] Passenger 9 is acquiring ticket
+[Time: 00:00:26] Passenger 26 has entered the park
+[Time: 00:00:26] Passenger 26 is exploring_park
+[Time: 00:00:27] Passenger 22 is getting in the ticket line
+[Time: 00:00:27] Passenger 22 waiting in line for ticket
+[Time: 00:00:27] Passenger 27 has entered the park
+[Time: 00:00:27] Passenger 27 is exploring_park
+[Time: 00:00:28] Passenger 24 is getting in the ticket line
+[Time: 00:00:28] Passenger 24 waiting in line for ticket
+[Time: 00:00:28] Passenger 9 acquired ticket
+[Time: 00:00:28] Passenger 9 joined the ride queue
+[Time: 00:00:28] Passenger 28 has entered the park
+[Time: 00:00:28] Passenger 28 is exploring_park
+[Time: 00:00:28] Passenger 10 is acquiring ticket
+[Time: 00:00:28] car 0 is unloading
+[Time: 00:00:28] Passenger 0 unboarded car 0
+[Time: 00:00:28] Passenger 1 unboarded car 0
+[Time: 00:00:28] Passenger 2 unboarded car 0
+[Time: 00:00:28] Passe
+[Monitor] FINAL STATISTICS:
+Total simulation time: 00:00:30
+Total passengers served: 30
+Total rides completed: 1
+Average wait time in ticket queue: 9.545 seconds
+Average wait time in ride queue: 0.000 seconds
+Average car utilization: 100.00%
+nger 4 unboarded car 0
+[Time: 00:00:28] Passenger 3 unboarded car 0
 [Time: 00:00:28] Passenger 4 is exploring_park
-[Time: 00:00:28] Passenger 7 is exploring_park
 [Time: 00:00:28] Passenger 3 is exploring_park
-[Time: 00:00:29] Passenger 0 acquired ticket
-[Time: 00:00:29] Passenger 0 joined the ride queue
-[Time: 00:00:29] Passenger 2 is acquiring ticket
-[Time: 00:00:29] Passenger 0 boarded car 0
-[Time: 00:00:31] Passenger 2 acquired ticket
-[Time: 00:00:31] Passenger 2 joined the ride queue
-[Time: 00:00:31] Passenger 2 boarded car 0
-[Time: 00:00:31] car 0 is running
-[Time: 00:00:31] car 1 invoked load()
-[Time: 00:00:32] Passenger 1 is acquiring ticket
-[Time: 00:00:32] Passenger 3 is getting in the ticket line
-[Time: 00:00:32] Passenger 3 waiting in line for ticket
-[Time: 00:00:33] Passenger 4 is getting in the ticket line
-[Time: 00:00:33] Passenger 4 waiting in line for ticket
-[Time: 00:00:33] Passenger 7 is getting in the ticket line
-[Time: 00:00:33] Passenger 7 waiting in line for ticket
-[Time: 00:00:34] Passenger 1 acquired ticket
-[Time: 00:00:34] Passenger 1 joined the ride queue
-[Time: 00:00:34] car 2 is unloading
-[Time: 00:00:34] Passenger 5 unboarded car 2
-[Time: 00:00:34] Passenger 6 unboarded car 2
-[Time: 00:00:34] Passenger 8 unboarded car 2
-[Time: 00:00:34] Passenger 5 is exploring_park
-[Time: 00:00:34] Passenger 8 is exploring_park
-[Time: 00:00:34] Passenger 6 is exploring_park
-[Time: 00:00:34] Passenger 3 is acquiring ticket
-[Time: 00:00:34] Passenger 1 boarded car 1
-[Time: 00:00:36] Passenger 5 is getting in the ticket line
-[Time: 00:00:36] Passenger 5 waiting in line for ticket
-[Time: 00:00:36] Passenger 6 is getting in the ticket line
-[Time: 00:00:36] Passenger 6 waiting in line for ticket
-[Time: 00:00:36] Passenger 3 acquired ticket
-[Time: 00:00:36] Passenger 3 joined the ride queue
-[Time: 00:00:36] Passenger 3 boarded car 1
-[Time: 00:00:37] Passenger 4 is acquiring ticket
-[Time: 00:00:38] Passenger 8 is getting in the ticket line
-[Time: 00:00:38] Passenger 8 waiting in line for ticket
-[Time: 00:00:39] Passenger 4 acquired ticket
-[Time: 00:00:39] Passenger 4 joined the ride queue
-[Time: 00:00:39] Passenger 7 is acquiring ticket
-[Time: 00:00:39] Passenger 4 boarded car 1
-[Time: 00:00:39] car 1 is running
-[Time: 00:00:40] car 2 invoked load()
-[Time: 00:00:41] car 0 is unloading
-[Time: 00:00:41] Passenger 9 unboarded car 0
-[Time: 00:00:41] Passenger 0 unboarded car 0
-[Time: 00:00:41] Passenger 2 unboarded car 0
-[Time: 00:00:41] Passenger 0 is exploring_park
-[Time: 00:00:41] Passenger 9 is exploring_park
-[Time: 00:00:41] Passenger 2 is exploring_park
-[Time: 00:00:41] Passenger 7 acquired ticket
-[Time: 00:00:41] Passenger 7 joined the ride queue
-[Time: 00:00:41] Passenger 5 is acquiring ticket
-[Time: 00:00:41] Passenger 7 boarded car 2
-[Time: 00:00:43] Passenger 2 is getting in the ticket line
-[Time: 00:00:43] Passenger 2 waiting in line for ticket
-[Time: 00:00:43] Passenger 0 is getting in the ticket line
-[Time: 00:00:43] Passenger 0 waiting in line for ticket
-[Time: 00:00:43] Passenger 5 acquired ticket
-[Time: 00:00:43] Passenger 5 joined the ride queue
-[Time: 00:00:43] Passenger 6 is acquiring ticket
-[Time: 00:00:43] Passenger 5 boarded car 2
-[Time: 00:00:45] Passenger 6 acquired ticket
-[Time: 00:00:45] Passenger 6 joined the ride queue
-[Time: 00:00:45] Passenger 6 boarded car 2
-[Time: 00:00:45] car 2 is running
-[Time: 00:00:46] Passenger 9 is getting in the ticket line
-[Time: 00:00:46] Passenger 9 waiting in line for ticket
-[Time: 00:00:46] car 0 invoked load()
-[Time: 00:00:46] Passenger 8 is acquiring ticket
-[Time: 00:00:48] Passenger 8 acquired ticket
-[Time: 00:00:48] Passenger 8 joined the ride queue
-[Time: 00:00:49] Passenger 2 is acquiring ticket
-[Time: 00:00:49] Passenger 8 boarded car 0
-[Time: 00:00:49] car 1 is unloading
-[Time: 00:00:49] Passenger 1 unboarded car 1
-[Time: 00:00:49] Passenger 3 unboarded car 1
-[Time: 00:00:49] Passenger 4 unboarded car 1
-[Time: 00:00:49] Passenger 1 is exploring_park
-[Time: 00:00:49] Passenger 4 is exploring_park
-[Time: 00:00:49] Passenger 3 is exploring_park
-[Time: 00:00:51] Passenger 2 acquired ticket
-[Time: 00:00:51] Passenger 2 joined the ride queue
-[Time: 00:00:51] Passenger 0 is acquiring ticket
-[Time: 00:00:51] Passenger 2 boarded car 0
-[Time: 00:00:52] Passenger 4 is getting in the ticket line
-[Time: 00:00:52] Passenger 4 waiting in line for ticket
-[Time: 00:00:53] Passenger 0 acquired ticket
-[Time: 00:00:53] Passenger 0 joined the ride queue
-[Time: 00:00:53] Passenger 0 boarded car 0
-[Time: 00:00:53] car 0 is running
-[Time: 00:00:53] Passenger 3 is getting in the ticket line
-[Time: 00:00:53] Passenger 3 waiting in line for ticket
-[Time: 00:00:53] car 1 invoked load()
-[Time: 00:00:54] Passenger 9 is acquiring ticket
-[Time: 00:00:54] Passenger 1 is getting in the ticket line
-[Time: 00:00:54] Passenger 1 waiting in line for ticket
-[Time: 00:00:55] car 2 is unloading
-[Time: 00:00:55] Passenger 7 unboarded car 2
-[Time: 00:00:55] Passenger 5 unboarded car 2
-[Time: 00:00:55] Passenger 6 unboarded car 2
-[Time: 00:00:55] [Time: 00:00:55] Passenger 7 is exploring_park
-Passenger 6 is exploring_park
-[Time: 00:00:55] Passenger 5 is exploring_park
-[Time: 00:00:56] Passenger 9 acquired ticket
-[Time: 00:00:56] Passenger 9 joined the ride queue
-[Time: 00:00:56] Passenger 4 is acquiring ticket
-[Time: 00:00:56] Passenger 9 boarded car 1
-[Time: 00:00:58] passengers exiting park
-[Time: 00:00:58] Passenger 1 is acquiring ticket
-[Time: 00:00:58] Passenger 4 acquired ticket
-[Time: 00:00:58] Passenger 4 joined the ride queue
-[Time: 00:00:58] passenger 4 exiting park
-[Time: 00:00:58] Passenger 3 is acquiring ticket
-[Time: 00:00:58] car 1 is unloading
-[Time: 00:00:58] Passenger 9 unboarded car 1
-[Time: 00:00:58] passenger 9 exiting park
-[Time: 00:00:59] Passenger 6 is getting in the ticket line
-[Time: 00:00:59] passenger 6 exiting park
-[Time: 00:00:59] Passenger 7 is getting in the ticket line
-[Time: 00:00:59] passenger 7 exiting park
-[Time: 00:01:00] Passenger 5 is getting in the ticket line
-[Time: 00:01:00] passenger 5 exiting park
-[Time: 00:01:00] Passenger 1 acquired ticket
-[Time: 00:01:00] Passenger 1 joined the ride queue
-[Time: 00:01:00] passenger 1 exiting park
-[Time: 00:01:00] Passenger 3 acquired ticket
-[Time: 00:01:00] Passenger 3 joined the ride queue
-[Time: 00:01:00] passenger 3 exiting park
-[Time: 00:01:03] car 0 is unloading
-[Time: 00:01:03] Passenger 8 unboarded car 0
-[Time: 00:01:03] Passenger 2 unboarded car 0
-[Time: 00:01:03] Passenger 0 unboarded car 0
-[Time: 00:01:03] passenger 0 exiting park
-[Time: 00:01:03] passenger 8 exiting park
-[Time: 00:01:03] passenger 2 exiting park
+[Time: 00:00:28] Passenger 0 is exploring_park
+[Time: 00:00:28] Passenger 1 is exploring_park
+[Time: 00:00:28] Passenger 2 is exploring_park
+[Time: 00:00:28] Passenger 7 unboarded car 0
+[Time: 00:00:28] Passenger 7 is exploring_park
+[Time: 00:00:28] Passenger 9 boarded car 2
+[Time: 00:00:29] Passenger 25 is getting in the ticket line
+[Time: 00:00:29] Passenger 25 waiting in line for ticket
+[Time: 00:00:29] Passenger 29 has entered the park
+[Time: 00:00:29] Passenger 29 is exploring_park
+[Time: 00:00:30] Passenger 26 is getting in the ticket line
+[Time: 00:00:30] Passenger 26 waiting in line for ticket
+[Time: 00:00:30] Passenger 10 acquired ticket
+[Time: 00:00:30] Passenger 10 joined the ride queue
+[Time: 00:00:30] Passenger 11 is acquiring ticket
+[Time: 00:00:30] all threads have exited park

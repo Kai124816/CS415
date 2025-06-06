@@ -21,6 +21,7 @@ extern int num_passengers;
 extern int waiting_time;
 extern int in_park;
 extern int total_rides;
+extern int in_park;
 extern int* rounds_array;
 extern int* ready_to_unboard;
 extern Queue* ticket_queue;
@@ -38,6 +39,7 @@ extern pthread_mutex_t print_lock;
 extern pthread_mutex_t ticket_line_lock;
 extern pthread_mutex_t car_queue_lock;
 extern pthread_mutex_t increment_lock;
+extern sem_t sem;
 
 //Thread Functions
 void create_passenger_threads(int num_threads);

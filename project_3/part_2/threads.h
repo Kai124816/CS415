@@ -18,6 +18,7 @@ extern int num_cars;
 extern int duration;
 extern int num_passengers;
 extern int waiting_time;
+extern int in_park;
 extern int* rounds_array;
 extern int* ready_to_unboard;
 extern Queue* ticket_queue;
@@ -30,6 +31,8 @@ extern pthread_t* car_id_array;
 extern pthread_mutex_t ticket_line_lock;
 extern pthread_mutex_t car_queue_lock;
 extern pthread_mutex_t increment_lock;
+extern pthread_mutex_t print_lock;
+extern sem_t sem;
 
 
 //Thread Functions
