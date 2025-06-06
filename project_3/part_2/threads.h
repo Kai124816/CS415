@@ -12,7 +12,6 @@
 #include "passenger_cond.h"
 
 //Global Variables and Structs
-extern int stop;
 extern int ready_to_load;
 extern int loading_capacity;
 extern int num_cars;
@@ -53,7 +52,6 @@ void unload(int id);
 
 //Helper Functions 
 void initializer();
-int check_to_stop();
 void cleanup();
 
 

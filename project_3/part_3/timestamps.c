@@ -16,3 +16,14 @@ void print_elapsed_time() {
 
     printf("[Time: %02d:%02d:%02d] ", hours, minutes, seconds);
 }
+
+void get_elapsed_time_string(char* buffer, size_t size) {
+    time_t current_time = time(NULL);
+    time_t elapsed = current_time - start_time;
+
+    int hours = (int)(elapsed / 3600);
+    int minutes = (int)((elapsed % 3600) / 60);
+    int seconds = (int)(elapsed % 60);
+
+    snprintf(buffer, size, "%02d:%02d:%02d", hours, minutes, seconds);
+}

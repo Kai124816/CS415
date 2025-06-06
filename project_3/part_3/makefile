@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -pthread -g
 
 # Source files
-SRCS = park.c threads.c queue.c car_state.c passenger_cond.c timestamps.c
+SRCS = park.c threads.c queue.c car_state.c passenger_cond.c timestamps.c simulation_stats.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)

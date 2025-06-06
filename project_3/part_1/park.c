@@ -58,11 +58,16 @@ int main(int argc, char *argv[]) {
     initializer();
     create_passenger_threads(num_passengers);
     create_car_threads(num_cars);
-    sleep(58);
+    sleep(60);
 
-    stop = 1;
-    print_elapsed_time();
-    printf("passengers have started to exit the park\n");
+    for(int i = 0; i < num_passengers; ++i)
+    {
+        pthread_cancel(passenger_id_array[i]);
+    }
+    for(int i = 0; i < num_cars; ++i)
+    {
+        pthread_cancel(car_id_array[i]);
+    }
     for (int i = 0; i < num_passengers; ++i)
     {
 		pthread_join(passenger_id_array[i], NULL);			
@@ -71,5 +76,6 @@ int main(int argc, char *argv[]) {
     {
 		pthread_join(car_id_array[i], NULL);			
 	}
+    printf("all threads have exited park\n");
     cleanup();
 }

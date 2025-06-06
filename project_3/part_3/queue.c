@@ -10,6 +10,7 @@ void initializeQueue(Queue* q)
 {
     q->front = -1;
     q->rear = 0;
+    q->count = 0;
 }
 
 
@@ -26,6 +27,7 @@ void enqueue(Queue* q, int value)
     }
     q->items[q->rear] = value;
     q->rear++;
+    q->count++;
 }
 
 
@@ -36,6 +38,7 @@ int dequeue(Queue* q)
     }
     int ret = q->items[q->front+1];
     q->front++;
+    q->count--;
     return ret;
 }
 

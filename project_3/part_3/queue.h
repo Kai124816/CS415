@@ -13,6 +13,7 @@ typedef struct {
     int items[MAX_SIZE];
     int front;
     int rear;
+    int count;
 } Queue;
 
 void initializeQueue(Queue* q);
@@ -22,6 +23,7 @@ void enqueue(Queue* q, int value);
 int dequeue(Queue* q);
 int peek(Queue* q);
 void empty_queue(Queue* q);
+char* queue_buffer(Queue* q);
 
 #endif 
 
