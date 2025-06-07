@@ -18,6 +18,7 @@ extern int num_cars;
 extern int duration;
 extern int num_passengers;
 extern int waiting_time;
+extern int in_park;
 extern int* rounds_array;
 extern int* ready_to_unboard;
 extern Queue* ticket_queue;

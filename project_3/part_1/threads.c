@@ -18,6 +18,7 @@ int num_cars = 1;
 int num_passengers = 1;
 int waiting_time = 10;
 int duration = 10;
+int in_park = 0;
 int* rounds_array = NULL;
 int* ready_to_unboard = NULL;
 Queue* ticket_queue = NULL;
@@ -59,6 +60,7 @@ void* passenger_routine(void* arg)
     sleep(*thread_id);
     print_elapsed_time();
     printf("Passenger %d has entered the park\n",*thread_id);
+    in_park++;
 
     while(1)
     {
@@ -192,6 +194,7 @@ void load(int id)
             pthread_mutex_unlock(&cond_array[p1]->board_lock);
             print_elapsed_time();
             printf("Passenger %d boarded car %d\n",p1,id);
+            if(in_park == 1){break;}
         }
         else{sleep(1);}
         clock_t end = clock(); // Record end time
